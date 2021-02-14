@@ -4,29 +4,48 @@ require('dotenv').config()
 const axios = require('axios')
 const numeral = require('numeral')
 const moment = require('moment')
+const tc = require('title-case')
 
 const arduinoApiUrl = `${process.env.ARDUINO_API_URL}/messages`
 
+const getYouTubeStats = async () => {
+  const response = await axios.get(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${process.env.CHANNEL_ID}&key=${process.env.API_KEY}`)
+  const data = response.data
+
+  const info = data.items.find((i) => i.id === process.env.CHANNEL_ID)
+  return info.statistics
+}
+
+const getWeather = async () => {
+  const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(process.env.WEATHER_CITY)}&appid=${process.env.WEATHER_API_KEY}&units=metric`)
+  return response.data
+}
+
 const start = async () => {
   try {
-    const response = await axios.get(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${process.env.CHANNEL_ID}&key=${process.env.API_KEY}`)
-    const data = response.data
-
-    const info = data.items.find((i) => i.id === process.env.CHANNEL_ID)
-    const stats = info.statistics
+    const weatherInfo = await getWeather()
+    const youtubeStats = await getYouTubeStats()
 
     const messages = [
+      {
+        key: `${process.env.WEATHER_CITY}`,
+        value: `${tc.titleCase(weatherInfo.weather[0].description)}`
+      },
+      {
+        key: `${process.env.WEATHER_CITY}`,
+        value: `${weatherInfo.main.temp}C / ${weatherInfo.main.feels_like}C`
+      },
       {
         key: `${moment().format('MMM Do, YYYY')}`,
         value: `${moment().format('h:mm:ss a')}`
       },
       {
         key: 'Subscribers',
-        value: `YouTube: ${numeral(stats.subscriberCount).format('0,0')}`
+        value: `YouTube: ${numeral(youtubeStats.subscriberCount).format('0,0')}`
       },
       {
         key: 'View Count',
-        value: `YouTube: ${numeral(stats.viewCount).format('0,0')}`
+        value: `YouTube: ${numeral(youtubeStats.viewCount).format('0,0')}`
       }
     ]
     await axios.post(arduinoApiUrl, { messages })

@@ -47,7 +47,7 @@ const writeText = async (text) => {
 }
 
 const sendText = async (messages) => {
-  const displayTime = 3000
+  const displayTime = 5000
 
   // init
   messages.unshift('LCD_BL_ON')
