@@ -10,6 +10,7 @@ services:
     volumes:      
       - /dev/ttyACM0:/dev/ttyACM0
     environment:
+      TIME_ZONE: UTC
       YOUTUBE_CHANNEL_ID: <YouTube Channel ID>
       YOUTUBE_API_KEY: <YouTube API Key>
       WEATHER_CITY: <Open Weather City>

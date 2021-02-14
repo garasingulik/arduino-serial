@@ -2,13 +2,13 @@ require('dotenv').config()
 
 const axios = require('axios')
 const numeral = require('numeral')
-const moment = require('moment')
+const moment = require('moment-timezone')
 const tc = require('title-case')
 
 const getTime = () => {
   return [{
-    key: `${moment().format('MMM Do, YYYY')}`,
-    value: `${moment().format('h:mm:ss a')}`
+    key: `${moment().tz(process.env.TIME_ZONE).format('MMM Do, YYYY')}`,
+    value: `${moment().tz(process.env.TIME_ZONE).format('h:mm:ss a')}`
   }]
 }
 
