@@ -3,11 +3,7 @@ require('dotenv').config()
 const numeral = require('numeral')
 const axios = require('axios')
 
-const arduinoApiUrl = `${process.env.ARDUINO_API_URL}/message`
-
-const sleep = (ms) => {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
+const arduinoApiUrl = `${process.env.ARDUINO_API_URL}/messages`
 
 const start = async () => {
   try {

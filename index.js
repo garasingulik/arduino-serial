@@ -61,7 +61,7 @@ const start = async () => {
     res.send('OK')
   })
 
-  app.post('/message', async (req, res) => {
+  app.post('/messages', async (req, res) => {
     if (displaying) {
       return res.status(404).send('Unavailable')
     }
