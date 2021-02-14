@@ -35,11 +35,43 @@ void setup()
   lcd.clear();
 }
 
+void checkButton()
+{
+  int keyRate = 500;
+  int x = analogRead(0);
+
+  if (x < 60)
+  {
+    Serial.println("BTN_RIGHT_PRESSED");
+    delay(keyRate);
+  }
+  else if (x < 200)
+  {
+    Serial.println("BTN_UP_PRESSED");
+    delay(keyRate);
+  }
+  else if (x < 400)
+  {
+    Serial.println("BTN_DOWN_PRESSED");
+    delay(keyRate);
+  }
+  else if (x < 600)
+  {
+    Serial.println("BTN_LEFT_PRESSED");
+    delay(keyRate);
+  }
+  else if (x < 800)
+  {
+    Serial.println("BTN_SELECT_PRESSED");
+    delay(keyRate);
+  }
+}
+
 void loop()
 {
   while (!Serial.available())
   {
-    ; // wait for user input
+    checkButton();
   }
 
   while (Serial.available() > 0)

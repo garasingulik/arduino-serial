@@ -1,0 +1,16 @@
+[Unit]
+Description=Arduino Serial Service
+Documentation=https://indragunawan.com
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node /var/www/arduino-serial/index.js
+Type=simple
+Restart=on-failure
+User=ubuntu
+Environment=NODE_PORT=3000
+Environment=/usr/bin:/usr/local/bin
+WorkingDirectory=/var/www/arduino-serial/
+
+[Install]
+WantedBy=multi-user.target

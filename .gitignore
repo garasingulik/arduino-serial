@@ -1,2 +1,3 @@
+systemd/arduino-serial.service
 node_modules
 .env

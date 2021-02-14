@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 
+require('dotenv').config()
+
+const axios = require('axios')
 const express = require('express')
 const bodyParser = require('body-parser')
+
+const stats = require('./lib/stats')
 
 const app = express()
 app.use(bodyParser.json())
@@ -16,8 +21,36 @@ const parser = port.pipe(new Readline({ delimiter: '\n' }))
 
 let displaying = false
 
-parser.on('data', data => {
-  console.log(`Arduino Response: ${data}`)
+parser.on('data', async (data) => {
+  // select button
+  let messages = []
+  switch (data) {
+    case 'BTN_SELECT_PRESSED\r':
+      messages = messages.concat(stats.getTime())
+      messages = messages.concat(await stats.getWeather())
+      messages = messages.concat(await stats.getYouTubeStats())
+      await axios.post(`${process.env.API_URL}/messages`, { messages })
+      break
+    case 'BTN_UP_PRESSED\r':
+      messages = messages.concat(stats.getTime())
+      await axios.post(`${process.env.API_URL}/messages`, { messages })
+      break
+    case 'BTN_DOWN_PRESSED\r':
+      messages = messages.concat(await stats.getWeather())
+      await axios.post(`${process.env.API_URL}/messages`, { messages })
+      break
+    case 'BTN_LEFT_PRESSED\r':
+      messages = messages.concat(await stats.getYouTubeStats())
+      await axios.post(`${process.env.API_URL}/messages`, { messages: [messages[0]] })
+      break
+    case 'BTN_RIGHT_PRESSED\r':
+      messages = messages.concat(await stats.getYouTubeStats())
+      await axios.post(`${process.env.API_URL}/messages`, { messages: [messages[1]] })
+      break
+    default:
+      console.log(`Arduino Response: ${data}`)
+      break;
+  }
 })
 
 port.on("open", async () => {
@@ -55,15 +88,26 @@ const sendText = async (messages) => {
   messages.push('LCD_BL_OFF')
 
   for (const message of messages) {
+    writeText(`${message}\n`)
     // match the display time
     await sleep(displayTime)
-    writeText(`${message}\n`)
   }
 }
 
 const start = async () => {
   app.get('/', (req, res) => {
     res.send('OK')
+  })
+
+  app.post('/stats', async (req, res) => {
+    let messages = []
+
+    messages = messages.concat(stats.getTime())
+    messages = messages.concat(await stats.getWeather())
+    messages = messages.concat(await stats.getYouTubeStats())
+
+    await axios.post(`${process.env.API_URL}/messages`, { messages })
+    return res.send('OK')
   })
 
   app.post('/messages', async (req, res) => {
