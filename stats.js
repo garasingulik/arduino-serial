@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 require('dotenv').config()
-const numeral = require('numeral')
+
 const axios = require('axios')
+const numeral = require('numeral')
+const moment = require('moment')
 
 const arduinoApiUrl = `${process.env.ARDUINO_API_URL}/messages`
 
@@ -14,6 +16,10 @@ const start = async () => {
     const stats = info.statistics
 
     const messages = [
+      {
+        key: `${moment().format('MMM Do, YYYY')}`,
+        value: `${moment().format('h:mm:ss a')}`
+      },
       {
         key: 'Subscribers',
         value: `YouTube: ${numeral(stats.subscriberCount).format('0,0')}`

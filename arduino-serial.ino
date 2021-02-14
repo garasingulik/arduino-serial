@@ -10,9 +10,12 @@ const int pin_BL = 10;
 
 LiquidCrystal lcd(pin_RS, pin_EN, pin_d4, pin_d5, pin_d6, pin_d7);
 
+int displayTime = 5000;
+
 void setup()
 {
   Serial.begin(9600);
+  Serial.setTimeout(3000);
   while (!Serial)
   {
     ; // wait for serial port to connect. Needed for native USB
@@ -49,14 +52,18 @@ void loop()
       digitalWrite(pin_BL, HIGH);
       Serial.println("LCD Backlight is ON");
     }
-
-    if (str == "LCD_BL_OFF")
+    else if (str == "LCD_BL_OFF")
     {
       digitalWrite(pin_BL, LOW);
       Serial.println("LCD Backlight is OFF");
     }
-
-    if (str != "LCD_BL_ON" && str != "LCD_BL_OFF")
+    else if (str.startsWith("DISP_TIME_"))
+    {
+      String timeStr = str.substring(10);
+      int displayTime = timeStr.toInt();
+      Serial.println("Setting display time to: " + String(displayTime));
+    }
+    else
     {
       if (str.length() < 32)
       {
@@ -79,7 +86,7 @@ void loop()
       }
 
       // display time
-      delay(5000);
+      delay(displayTime);
 
       // clear lcd
       lcd.setCursor(0, 0);

@@ -47,11 +47,16 @@ const writeText = async (text) => {
 }
 
 const sendText = async (messages) => {
+  const displayTime = 3000
+
+  // init
   messages.unshift('LCD_BL_ON')
+  messages.unshift(`DISP_TIME_${displayTime}`)
   messages.push('LCD_BL_OFF')
 
   for (const message of messages) {
-    await sleep(2000)
+    // match the display time
+    await sleep(displayTime)
     writeText(`${message}\n`)
   }
 }
