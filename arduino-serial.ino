@@ -49,12 +49,14 @@ void loop()
       digitalWrite(pin_BL, HIGH);
       Serial.println("LCD Backlight is ON");
     }
-    else if (str == "LCD_BL_OFF")
+
+    if (str == "LCD_BL_OFF")
     {
       digitalWrite(pin_BL, LOW);
       Serial.println("LCD Backlight is OFF");
     }
-    else
+
+    if (str != "LCD_BL_ON" && str != "LCD_BL_OFF")
     {
       if (str.length() < 32)
       {
