@@ -70,6 +70,7 @@ const start = async () => {
     const messages = req.body.messages
 
     if (!messages || !Array.isArray(messages)) {
+      displaying = false
       return res.status(400).send('Bad Request')
     }
 
