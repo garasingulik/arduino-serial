@@ -1,0 +1,17 @@
+version: "3"
+services:
+  arduino-serial:
+    build: .
+    container_name: arduino-serial
+    privileged: true
+    restart: always
+    ports:
+      - "3000:80"
+    volumes:      
+      - /dev/ttyACM0:/dev/ttyACM0
+    environment:
+      YOUTUBE_CHANNEL_ID: <YouTube Channel ID>
+      YOUTUBE_API_KEY: <YouTube API Key>
+      WEATHER_CITY: <Open Weather City>
+      WEATHER_API_KEY: <Open Weather API Key>
+

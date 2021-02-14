@@ -2,9 +2,9 @@
   "name": "arduino-serial",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/index.js",
     "compile": "arduino-cli compile --fqbn arduino:avr:uno arduino-serial",
     "upload": "arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno arduino-serial"
   },

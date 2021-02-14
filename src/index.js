@@ -19,8 +19,6 @@ const Readline = require('@serialport/parser-readline')
 const port = new SerialPort('/dev/ttyACM0', { baudRate: 9600 })
 const parser = port.pipe(new Readline({ delimiter: '\n' }))
 
-let displaying = false
-
 parser.on('data', async (data) => {
   // select button
   let messages = []
@@ -29,23 +27,23 @@ parser.on('data', async (data) => {
       messages = messages.concat(stats.getTime())
       messages = messages.concat(await stats.getWeather())
       messages = messages.concat(await stats.getYouTubeStats())
-      await axios.post(`${process.env.API_URL}/messages`, { messages })
+      await sendMessages(messages);
       break
     case 'BTN_UP_PRESSED\r':
       messages = messages.concat(stats.getTime())
-      await axios.post(`${process.env.API_URL}/messages`, { messages })
+      await sendMessages(messages);
       break
     case 'BTN_DOWN_PRESSED\r':
       messages = messages.concat(await stats.getWeather())
-      await axios.post(`${process.env.API_URL}/messages`, { messages })
+      await sendMessages(messages);
       break
     case 'BTN_LEFT_PRESSED\r':
       messages = messages.concat(await stats.getYouTubeStats())
-      await axios.post(`${process.env.API_URL}/messages`, { messages: [messages[0]] })
+      await sendMessages([messages[0]]);
       break
     case 'BTN_RIGHT_PRESSED\r':
       messages = messages.concat(await stats.getYouTubeStats())
-      await axios.post(`${process.env.API_URL}/messages`, { messages: [messages[1]] })
+      await sendMessages([messages[1]]);
       break
     default:
       console.log(`Arduino Response: ${data}`)
@@ -94,6 +92,14 @@ const sendText = async (messages) => {
   }
 }
 
+const sendMessages = async (messages) => {
+  const formattedMessages = messages.map((m) => {
+    return `${rightPad(m.key, 16)}${leftPad(m.value, 16)}`
+  })
+
+  await sendText(formattedMessages)
+}
+
 const start = async () => {
   app.get('/', (req, res) => {
     res.send('OK')
@@ -111,25 +117,13 @@ const start = async () => {
   })
 
   app.post('/messages', async (req, res) => {
-    if (displaying) {
-      return res.status(404).send('Unavailable')
-    }
-
-    displaying = true
     const messages = req.body.messages
 
     if (!messages || !Array.isArray(messages)) {
-      displaying = false
       return res.status(400).send('Bad Request')
     }
 
-    const formattedMessages = messages.map((m) => {
-      return `${rightPad(m.key, 16)}${leftPad(m.value, 16)}`
-    })
-
-    await sendText(formattedMessages)
-
-    displaying = false
+    await sendMessages(messages);
     return res.send('OK')
   })
 
