@@ -1,0 +1,16 @@
+[Unit]
+Description=Arduino Serial Service
+Documentation=https://indragunawan.com
+After=network.target
+
+[Service]
+ExecStart=/home/indra/.nvm/versions/node/v14.15.5/bin/node /home/indra/Workspaces/garasi/arduino-serial/index.js
+Type=simple
+Restart=on-failure
+User=indra
+Environment=NODE_PORT=3000
+Environment=/usr/bin:/usr/local/bin:/home/indra/.nvm/versions/node/v14.15.5/bin
+WorkingDirectory=/home/indra/Workspaces/garasi/arduino-serial/
+
+[Install]
+WantedBy=multi-user.target
