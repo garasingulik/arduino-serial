@@ -27,6 +27,7 @@ parser.on('data', async (data) => {
       messages = messages.concat(stats.getTime())
       messages = messages.concat(await stats.getWeather())
       messages = messages.concat(await stats.getYouTubeStats())
+      messages = messages.concat(await stats.getLumensBalance())
       await sendMessages(messages);
       break
     case 'BTN_UP_PRESSED\r':
@@ -39,11 +40,11 @@ parser.on('data', async (data) => {
       break
     case 'BTN_LEFT_PRESSED\r':
       messages = messages.concat(await stats.getYouTubeStats())
-      await sendMessages([messages[0]]);
+      await sendMessages(messages);
       break
     case 'BTN_RIGHT_PRESSED\r':
-      messages = messages.concat(await stats.getYouTubeStats())
-      await sendMessages([messages[1]]);
+      messages = messages.concat(await stats.getLumensBalance())
+      await sendMessages(messages);
       break
     default:
       console.log(`Arduino Response: ${data}`)
@@ -78,7 +79,8 @@ const writeText = async (text) => {
 }
 
 const sendText = async (messages) => {
-  const displayTime = 5000
+  const sleepTime = 5000
+  const displayTime = 4000
 
   // init
   messages.unshift('LCD_BL_ON')
@@ -88,7 +90,7 @@ const sendText = async (messages) => {
   for (const message of messages) {
     writeText(`${message}\n`)
     // match the display time
-    await sleep(displayTime)
+    await sleep(sleepTime)
   }
 }
 
@@ -111,6 +113,7 @@ const start = async () => {
     messages = messages.concat(stats.getTime())
     messages = messages.concat(await stats.getWeather())
     messages = messages.concat(await stats.getYouTubeStats())
+    messages = messages.concat(await stats.getLumensBalance())
 
     await axios.post(`${process.env.API_URL}/messages`, { messages })
     return res.send('OK')

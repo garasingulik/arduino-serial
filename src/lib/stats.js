@@ -5,6 +5,8 @@ const numeral = require('numeral')
 const moment = require('moment-timezone')
 const tc = require('title-case')
 
+const Client = require('coinbase').Client
+
 const getTime = () => {
   return [{
     key: `${moment().tz(process.env.TIME_ZONE).format('MMM Do, YYYY')}`,
@@ -47,8 +49,32 @@ const getYouTubeStats = async () => {
   ]
 }
 
+const getLumensBalance = () => {
+  const client = new Client({
+    'apiKey': process.env.COINBASE_API_KEY,
+    'apiSecret': process.env.COINBASE_API_SECRET,
+    strictSSL: false
+  })
+
+  return new Promise((resolve, reject) => {
+    client.getAccount(process.env.COINBASE_ACCOUNT, function (err, account) {
+      if (err) {
+        console.error(err)
+        return reject([])
+      }
+      return resolve([
+        {
+          key: account.name,
+          value: `${account.native_balance.amount} ${account.native_balance.currency}`
+        }
+      ])
+    })
+  })
+}
+
 module.exports = {
   getTime,
   getWeather,
-  getYouTubeStats
+  getYouTubeStats,
+  getLumensBalance
 }
