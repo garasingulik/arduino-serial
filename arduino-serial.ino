@@ -15,7 +15,7 @@ int displayTime = 5000;
 void setup()
 {
   Serial.begin(9600);
-  Serial.setTimeout(3000);
+  Serial.setTimeout(5000);
   while (!Serial)
   {
     ; // wait for serial port to connect. Needed for native USB
@@ -39,6 +39,12 @@ void checkButton()
 {
   int keyRate = 500;
   int x = analogRead(0);
+
+  if (x < 1000)
+  {
+    delay(keyRate);
+    Serial.println("ECHO: x value = " + String(x));
+  }
 
   if (x < 60)
   {
@@ -77,27 +83,27 @@ void loop()
   while (Serial.available() > 0)
   {
     String str = Serial.readStringUntil('\n');
-    Serial.println(str);
+    Serial.println("ECHO: " + str);
 
     if (str == "LCD_BL_ON")
     {
       digitalWrite(pin_BL, HIGH);
-      Serial.println("LCD Backlight is ON");
+      Serial.println("RESULT: LCD Backlight is ON");
     }
     else if (str == "LCD_BL_OFF")
     {
       digitalWrite(pin_BL, LOW);
-      Serial.println("LCD Backlight is OFF");
+      Serial.println("RESULT: LCD Backlight is OFF");
     }
     else if (str.startsWith("DISP_TIME_"))
     {
       String timeStr = str.substring(10);
       int displayTime = timeStr.toInt();
-      Serial.println("Setting display time to: " + String(displayTime));
+      Serial.println("RESULT: Setting display time to: " + String(displayTime));
     }
     else
     {
-      if (str.length() < 32)
+      if (str.length() > 32)
       {
         str = str.substring(0, 32);
       }
@@ -110,15 +116,19 @@ void loop()
         lcd.print(str1);
         lcd.setCursor(0, 1);
         lcd.print(str2);
+
+        // display time
+        delay(displayTime);
+        Serial.println("RESULT: Message has been displayed to LCD");
       }
       else
       {
         lcd.print(str);
-        Serial.println("Message has been displayed to LCD");
-      }
 
-      // display time
-      delay(displayTime);
+        // display time
+        delay(displayTime);
+        Serial.println("RESULT: Message has been displayed to LCD");
+      }
 
       // clear lcd
       lcd.setCursor(0, 0);

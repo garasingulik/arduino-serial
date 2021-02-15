@@ -19,6 +19,8 @@ const Readline = require('@serialport/parser-readline')
 const port = new SerialPort('/dev/ttyACM0', { baudRate: 9600 })
 const parser = port.pipe(new Readline({ delimiter: '\n' }))
 
+let isDisplaying = false
+
 parser.on('data', async (data) => {
   // select button
   let messages = []
@@ -47,7 +49,10 @@ parser.on('data', async (data) => {
       await sendMessages(messages);
       break
     default:
-      console.log(`Arduino Response: ${data}`)
+      console.log(data)
+      if (data.startsWith('RESULT:')) {
+        isDisplaying = false
+      }
       break;
   }
 })
@@ -79,8 +84,7 @@ const writeText = async (text) => {
 }
 
 const sendText = async (messages) => {
-  const sleepTime = 5000
-  const displayTime = 4000
+  const displayTime = 5000
 
   // init
   messages.unshift('LCD_BL_ON')
@@ -88,9 +92,14 @@ const sendText = async (messages) => {
   messages.push('LCD_BL_OFF')
 
   for (const message of messages) {
+    let totalSleep = 0
     writeText(`${message}\n`)
-    // match the display time
-    await sleep(sleepTime)
+
+    isDisplaying = true
+    while (isDisplaying && totalSleep < 10000) {
+      totalSleep += 100
+      await sleep(100)
+    }
   }
 }
 
