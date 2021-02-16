@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "NODE_PORT=3000 node src/index.js",
     "compile": "arduino-cli compile --fqbn arduino:avr:uno arduino-serial",
     "upload": "arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno arduino-serial"
   },

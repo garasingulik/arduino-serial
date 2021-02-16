@@ -43,7 +43,7 @@ void checkButton()
   if (x < 1000)
   {
     delay(keyRate);
-    Serial.println("ECHO: x value = " + String(x));
+    Serial.println("ECHO: x = " + String(x));
   }
 
   if (x < 60)
@@ -88,18 +88,18 @@ void loop()
     if (str == "LCD_BL_ON")
     {
       digitalWrite(pin_BL, HIGH);
-      Serial.println("RESULT: LCD Backlight is ON");
+      Serial.println("RESULT: LCD BL = ON");
     }
     else if (str == "LCD_BL_OFF")
     {
       digitalWrite(pin_BL, LOW);
-      Serial.println("RESULT: LCD Backlight is OFF");
+      Serial.println("RESULT: LCD BL = OFF");
     }
     else if (str.startsWith("DISP_TIME_"))
     {
       String timeStr = str.substring(10);
       int displayTime = timeStr.toInt();
-      Serial.println("RESULT: Setting display time to: " + String(displayTime));
+      Serial.println("RESULT: DISPLAY TIME = " + String(displayTime));
     }
     else
     {
@@ -119,7 +119,7 @@ void loop()
 
         // display time
         delay(displayTime);
-        Serial.println("RESULT: Message has been displayed to LCD");
+        Serial.println("RESULT: OK");
       }
       else
       {
@@ -127,7 +127,7 @@ void loop()
 
         // display time
         delay(displayTime);
-        Serial.println("RESULT: Message has been displayed to LCD");
+        Serial.println("RESULT: OK");
       }
 
       // clear lcd

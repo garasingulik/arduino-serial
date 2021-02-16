@@ -33,19 +33,19 @@ parser.on('data', async (data) => {
       await sendMessages(messages);
       break
     case 'BTN_UP_PRESSED\r':
-      messages = messages.concat(stats.getTime())
-      await sendMessages(messages);
-      break
-    case 'BTN_DOWN_PRESSED\r':
-      messages = messages.concat(await stats.getWeather())
-      await sendMessages(messages);
-      break
-    case 'BTN_LEFT_PRESSED\r':
       messages = messages.concat(await stats.getYouTubeStats())
       await sendMessages(messages);
       break
-    case 'BTN_RIGHT_PRESSED\r':
+    case 'BTN_DOWN_PRESSED\r':
       messages = messages.concat(await stats.getCoinbaseBalance())
+      await sendMessages(messages);
+      break
+    case 'BTN_LEFT_PRESSED\r':
+      messages = messages.concat(stats.getTime())
+      await sendMessages(messages);
+      break
+    case 'BTN_RIGHT_PRESSED\r':
+      messages = messages.concat(await stats.getWeather())
       await sendMessages(messages);
       break
     default:
