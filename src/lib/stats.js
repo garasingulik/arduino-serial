@@ -15,18 +15,39 @@ const getTime = () => {
 }
 
 const getWeather = async () => {
-  const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(process.env.WEATHER_CITY)}&appid=${process.env.WEATHER_API_KEY}&units=metric`)
+  const city = (process.env.WEATHER_CITY || '').split(',')
+  const response = await axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${city[1]}&lon=${city[2]}&units=metric&exclude=minutely,daily&appid=${process.env.WEATHER_API_KEY}`)
+
   const weatherInfo = response.data
+  const current = weatherInfo.current
+  const next2Hour = weatherInfo.hourly[1]
+  const next4Hour = weatherInfo.hourly[3]
 
   return [
     {
-      key: `${process.env.WEATHER_CITY}`,
-      value: `${tc.titleCase(weatherInfo.weather[0].description)}`
+      key: city[0],
+      value: `${tc.titleCase(current.weather[0].description)}`
     },
     {
-      key: `${process.env.WEATHER_CITY}`,
-      value: `${weatherInfo.main.temp} / ${weatherInfo.main.feels_like} *C`
-    }
+      key: 'Current Temp:',
+      value: `${current.temp} / ${current.feels_like} *C`
+    },
+    {
+      key: 'Next 2 hours:',
+      value: `${tc.titleCase(next2Hour.weather[0].description)}`
+    },
+    {
+      key: 'Next 2h temp:',
+      value: `${next2Hour.temp} / ${next2Hour.feels_like} *C`
+    },
+    {
+      key: 'Next 4 hours:',
+      value: `${tc.titleCase(next4Hour.weather[0].description)}`
+    },
+    {
+      key: 'Next 4h temp:',
+      value: `${next4Hour.temp} / ${next4Hour.feels_like} *C`
+    },
   ]
 }
 
