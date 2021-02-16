@@ -49,7 +49,7 @@ const getYouTubeStats = async () => {
   ]
 }
 
-const getLumensBalance = () => {
+const getCoinbaseBalance = () => {
   const client = new Client({
     'apiKey': process.env.COINBASE_API_KEY,
     'apiSecret': process.env.COINBASE_API_SECRET,
@@ -57,17 +57,23 @@ const getLumensBalance = () => {
   })
 
   return new Promise((resolve, reject) => {
-    client.getAccount(process.env.COINBASE_ACCOUNT, function (err, account) {
+    client.getAccounts({}, function (err, accounts) {
       if (err) {
         console.error(err)
         return reject([])
       }
-      return resolve([
-        {
+
+      const checkAccounts = (process.env.COINBASE_ACCOUNTS).split(',')
+      const coinbaseAccounts = checkAccounts.length >= 1 && checkAccounts[0] !== '' ? accounts.filter((ca) => checkAccounts.includes(ca.id)) : accounts
+
+      const messages = coinbaseAccounts.map((account) => {
+        return {
           key: account.name,
           value: `${account.native_balance.amount} ${account.native_balance.currency}`
         }
-      ])
+      })
+
+      return resolve(messages)
     })
   })
 }
@@ -76,5 +82,5 @@ module.exports = {
   getTime,
   getWeather,
   getYouTubeStats,
-  getLumensBalance
+  getCoinbaseBalance
 }

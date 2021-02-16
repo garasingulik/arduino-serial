@@ -29,7 +29,7 @@ parser.on('data', async (data) => {
       messages = messages.concat(stats.getTime())
       messages = messages.concat(await stats.getWeather())
       messages = messages.concat(await stats.getYouTubeStats())
-      messages = messages.concat(await stats.getLumensBalance())
+      messages = messages.concat(await stats.getCoinbaseBalance())
       await sendMessages(messages);
       break
     case 'BTN_UP_PRESSED\r':
@@ -45,7 +45,7 @@ parser.on('data', async (data) => {
       await sendMessages(messages);
       break
     case 'BTN_RIGHT_PRESSED\r':
-      messages = messages.concat(await stats.getLumensBalance())
+      messages = messages.concat(await stats.getCoinbaseBalance())
       await sendMessages(messages);
       break
     default:
@@ -122,7 +122,7 @@ const start = async () => {
     messages = messages.concat(stats.getTime())
     messages = messages.concat(await stats.getWeather())
     messages = messages.concat(await stats.getYouTubeStats())
-    messages = messages.concat(await stats.getLumensBalance())
+    messages = messages.concat(await stats.getCoinbaseBalance())
 
     await axios.post(`${process.env.API_URL}/messages`, { messages })
     return res.send('OK')

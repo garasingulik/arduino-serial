@@ -15,6 +15,6 @@ services:
       YOUTUBE_API_KEY: <YouTube API Key>
       WEATHER_CITY: <Open Weather City>
       WEATHER_API_KEY: <Open Weather API Key>
-      COINBASE_ACCOUNT: <Coinbase Wallet Account ID>
+      COINBASE_ACCOUNTS: <Coinbase Wallet Account ID>
       COINBASE_API_KEY: <Coinbase API Key>
       COINBASE_API_SECRET: <Coinbase API Secret>
