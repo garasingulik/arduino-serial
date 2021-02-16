@@ -10,7 +10,7 @@ const Client = require('coinbase').Client
 const getTime = () => {
   return [{
     key: `${moment().tz(process.env.TIME_ZONE).format('MMM Do, YYYY')}`,
-    value: `${moment().tz(process.env.TIME_ZONE).format('h:mm:ss a')}`
+    value: `${moment().tz(process.env.TIME_ZONE).format('ddd h:mm:ss a')}`
   }]
 }
 
