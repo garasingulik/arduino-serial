@@ -124,7 +124,7 @@ const start = async () => {
     messages = messages.concat(await stats.getYouTubeStats())
     messages = messages.concat(await stats.getCoinbaseBalance())
 
-    await axios.post(`${process.env.API_URL}/messages`, { messages })
+    await sendMessages(messages);
     return res.send('OK')
   })
 
