@@ -19,6 +19,7 @@ const Readline = require('@serialport/parser-readline')
 const port = new SerialPort('/dev/ttyACM0', { baudRate: 9600 })
 const parser = port.pipe(new Readline({ delimiter: '\n' }))
 
+const displayQueue = []
 let isDisplaying = false
 
 parser.on('data', async (data) => {
@@ -83,6 +84,28 @@ const writeText = async (text) => {
   })
 }
 
+const displayMessages = async () => {
+  if (displayQueue.length > 0) {
+    const messages = displayQueue.shift()
+    for (const message of messages) {
+      // don't turn off display if still got messages
+      if (message === 'LCD_BL_OFF' && displayQueue.length > 0) continue
+
+      let totalSleep = 0
+      writeText(`${message}\n`)
+
+      isDisplaying = true
+      while (isDisplaying && totalSleep < 10000) {
+        totalSleep += 100
+        await sleep(100)
+      }
+    }
+  }
+  setTimeout(async () => {
+    await displayMessages()
+  }, 500)
+}
+
 const sendText = async (messages) => {
   const displayTime = 5000
 
@@ -91,16 +114,7 @@ const sendText = async (messages) => {
   messages.unshift(`DISP_TIME_${displayTime}`)
   messages.push('LCD_BL_OFF')
 
-  for (const message of messages) {
-    let totalSleep = 0
-    writeText(`${message}\n`)
-
-    isDisplaying = true
-    while (isDisplaying && totalSleep < 10000) {
-      totalSleep += 100
-      await sleep(100)
-    }
-  }
+  displayQueue.push(messages)
 }
 
 const sendMessages = async (messages) => {
@@ -124,7 +138,11 @@ const start = async () => {
     messages = messages.concat(await stats.getYouTubeStats())
     messages = messages.concat(await stats.getCoinbaseBalance())
 
-    await sendMessages(messages);
+    // make it async
+    setTimeout(() => {
+      sendMessages(messages)
+    })
+
     return res.send('OK')
   })
 
@@ -135,13 +153,18 @@ const start = async () => {
       return res.status(400).send('Bad Request')
     }
 
-    await sendMessages(messages);
+    // make it async
+    setTimeout(() => {
+      sendMessages(messages)
+    })
+
     return res.send('OK')
   })
 
   app.listen(expressPort, async () => {
     await sleep(2000) // give time for serial port to connect
     console.log(`Arduino service is running at http://localhost:${expressPort}`)
+    displayMessages()
   })
 }
 
