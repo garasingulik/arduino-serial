@@ -16,8 +16,6 @@ const expressPort = process.env.NODE_PORT
 const SerialPort = require('serialport')
 const Readline = require('@serialport/parser-readline')
 
-const { fsck, reboot } = require('./lib/command')
-
 const port = new SerialPort('/dev/ttyACM0', { baudRate: 9600 })
 const parser = port.pipe(new Readline({ delimiter: '\n' }))
 
@@ -31,6 +29,7 @@ parser.on('data', async (data) => {
     case 'BTN_SELECT_PRESSED\r':
       messages = messages.concat(stats.getTime())
       messages = messages.concat(await stats.getWeather())
+      messages = messages.concat(await stats.getExhangeRate())
       messages = messages.concat(await stats.getYouTubeStats())
       messages = messages.concat(await stats.getCoinbaseBalance())
       await sendMessages(messages);
@@ -44,15 +43,8 @@ parser.on('data', async (data) => {
       await sendMessages(messages);
       break
     case 'BTN_LEFT_PRESSED\r':
-      await sendMessages([
-        {
-          key: "System rebooting",
-          value: "in 10 seconds..."
-        }
-      ])
-      await sleep(10000)
-      await fsck()
-      await reboot()
+      messages = messages.concat(await stats.getExhangeRate())
+      await sendMessages(messages);
       break
     case 'BTN_RIGHT_PRESSED\r':
       messages = messages.concat(await stats.getWeather())
@@ -144,6 +136,7 @@ const start = async () => {
 
     messages = messages.concat(stats.getTime())
     messages = messages.concat(await stats.getWeather())
+    messages = messages.concat(await stats.getExhangeRate())
     messages = messages.concat(await stats.getYouTubeStats())
     messages = messages.concat(await stats.getCoinbaseBalance())
 

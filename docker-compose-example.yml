@@ -18,3 +18,4 @@ services:
       COINBASE_ACCOUNTS: <Coinbase Wallet Account ID>
       COINBASE_API_KEY: <Coinbase API Key>
       COINBASE_API_SECRET: <Coinbase API Secret>
+      CONVERTER_API_KEY: <Free Currency Converter API Key>

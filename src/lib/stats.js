@@ -35,21 +35,9 @@ const getWeather = async () => {
       value: `${current.temp} / ${current.feels_like} *C`
     },
     {
-      key: 'Next 2 hours:',
-      value: `${tc.titleCase(next2Hour.weather[0].description)}`
-    },
-    {
-      key: 'Next 2h temp:',
-      value: `${next2Hour.temp} / ${next2Hour.feels_like} *C`
-    },
-    {
       key: 'Next 4 hours:',
       value: `${tc.titleCase(next4Hour.weather[0].description)}`
-    },
-    {
-      key: 'Next 4h temp:',
-      value: `${next4Hour.temp} / ${next4Hour.feels_like} *C`
-    },
+    }
   ]
 }
 
@@ -105,9 +93,30 @@ const getCoinbaseBalance = () => {
   })
 }
 
+const getExhangeRate = async () => {
+  const goldResponse = await axios.get(`https://free.currconv.com/api/v7/convert?q=XAU_MYR,MYR_IDR&compact=ultra&apiKey=${process.env.CONVERTER_API_KEY}`)
+  const data = goldResponse.data
+
+  if (data) {
+    return [
+      {
+        key: 'Gold Price =',
+        value: `${numeral(data['XAU_MYR'] / 31.1034768).format('0,0')} MYR / g`
+      },
+      {
+        key: '1 MYR =',
+        value: `${numeral(data['MYR_IDR']).format('0,0')} IDR`
+      }
+    ]
+  }
+
+  return []
+}
+
 module.exports = {
   getTime,
   getWeather,
   getYouTubeStats,
-  getCoinbaseBalance
+  getCoinbaseBalance,
+  getExhangeRate
 }
