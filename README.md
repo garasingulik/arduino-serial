@@ -19,6 +19,7 @@ WEATHER_API_KEY=<Open Weather API Key>
 COINBASE_ACCOUNTS=<Coinbase Wallet Account ID>
 COINBASE_API_KEY=<Coinbase API Key>
 COINBASE_API_SECRET=<Coinbase API Secret>
+CONVERTER_API_KEY=<Free Currency Converter API Key>
 ```
 
 # Running in Development
@@ -39,4 +40,16 @@ npm run compile
 
 ```
 npm run upload
+```
+
+## Running inside docker
+
+```
+docker-compose up -d --build
+```
+
+## Stoping docker container
+
+```
+docker-compose down
 ```

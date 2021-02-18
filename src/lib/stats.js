@@ -15,14 +15,13 @@ const getTime = () => {
 }
 
 const getWeather = async () => {
-  if (!process.env.WEATHER_CITY) return [];
+  if (!process.env.WEATHER_CITY) return []
 
   const city = process.env.WEATHER_CITY.split(',')
   const response = await axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${city[1]}&lon=${city[2]}&units=metric&exclude=minutely,daily&appid=${process.env.WEATHER_API_KEY}`)
 
   const weatherInfo = response.data
   const current = weatherInfo.current
-  const next2Hour = weatherInfo.hourly[1]
   const next4Hour = weatherInfo.hourly[3]
 
   return [
@@ -42,7 +41,7 @@ const getWeather = async () => {
 }
 
 const getYouTubeStats = async () => {
-  if (!process.env.YOUTUBE_CHANNEL_ID || !process.env.YOUTUBE_API_KEY) return [];
+  if (!process.env.YOUTUBE_CHANNEL_ID || !process.env.YOUTUBE_API_KEY) return []
 
   const response = await axios.get(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${process.env.YOUTUBE_CHANNEL_ID}&key=${process.env.YOUTUBE_API_KEY}`)
   const data = response.data
@@ -63,7 +62,7 @@ const getYouTubeStats = async () => {
 }
 
 const getCoinbaseBalance = () => {
-  if (!process.env.COINBASE_API_KEY || !process.env.COINBASE_API_SECRET) return [];
+  if (!process.env.COINBASE_API_KEY || !process.env.COINBASE_API_SECRET) return []
 
   const client = new Client({
     'apiKey': process.env.COINBASE_API_KEY,
@@ -94,6 +93,8 @@ const getCoinbaseBalance = () => {
 }
 
 const getExhangeRate = async () => {
+  if (!process.env.CONVERTER_API_KEY || !process.env.CONVERTER_API_KEY) return []
+
   const goldResponse = await axios.get(`https://free.currconv.com/api/v7/convert?q=XAU_MYR,MYR_IDR&compact=ultra&apiKey=${process.env.CONVERTER_API_KEY}`)
   const data = goldResponse.data
 
