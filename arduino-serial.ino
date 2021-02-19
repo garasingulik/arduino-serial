@@ -42,34 +42,29 @@ void checkButton()
 
   if (x < 1000)
   {
-    delay(keyRate);
     Serial.println("ECHO: x = " + String(x));
+    delay(keyRate);
   }
 
   if (x < 60)
   {
     Serial.println("BTN_RIGHT_PRESSED");
-    delay(keyRate);
   }
   else if (x < 200)
   {
     Serial.println("BTN_UP_PRESSED");
-    delay(keyRate);
   }
   else if (x < 400)
   {
     Serial.println("BTN_DOWN_PRESSED");
-    delay(keyRate);
   }
   else if (x < 600)
   {
     Serial.println("BTN_LEFT_PRESSED");
-    delay(keyRate);
   }
   else if (x < 800)
   {
     Serial.println("BTN_SELECT_PRESSED");
-    delay(keyRate);
   }
 }
 
