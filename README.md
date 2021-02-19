@@ -28,6 +28,18 @@ CONVERTER_API_KEY=<Free Currency Converter API Key>
 npm start
 ```
 
+## Running inside docker
+
+```
+docker-compose up -d --build
+```
+
+## Stoping docker container
+
+```
+docker-compose down
+```
+
 # Arduino Development
 
 ## Compile Sketch
@@ -40,16 +52,4 @@ npm run compile
 
 ```
 npm run upload
-```
-
-## Running inside docker
-
-```
-docker-compose up -d --build
-```
-
-## Stoping docker container
-
-```
-docker-compose down
 ```
