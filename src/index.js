@@ -108,14 +108,15 @@ const displayMessages = async () => {
 }
 
 const sendText = async (messages) => {
-  const displayTime = 5000
+  if (messages.length > 0) {
+    // init  
+    const displayTime = 5000
+    messages.unshift('LCD_BL_ON')
+    messages.unshift(`DISP_TIME_${displayTime}`)
+    messages.push('LCD_BL_OFF')
 
-  // init
-  messages.unshift('LCD_BL_ON')
-  messages.unshift(`DISP_TIME_${displayTime}`)
-  messages.push('LCD_BL_OFF')
-
-  displayQueue.push(messages)
+    displayQueue.push(messages)
+  }
 }
 
 const sendMessages = async (messages) => {

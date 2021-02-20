@@ -87,6 +87,15 @@ const getCoinbaseBalance = () => {
         }
       })
 
+      if (messages.length === 0) {
+        messages.push(
+          {
+            key: 'Conbase Status',
+            value: 'Wallet Offline'
+          }
+        )
+      }
+
       return resolve(messages)
     })
   })

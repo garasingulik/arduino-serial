@@ -37,7 +37,9 @@ void setup()
 
 void checkButton()
 {
-  int keyRate = 500;
+  // adjust the keyrate to match
+  // your preferred pressing button speed
+  int keyRate = 1000;
   int x = analogRead(0);
 
   if (x < 1000)
@@ -46,23 +48,26 @@ void checkButton()
     delay(keyRate);
   }
 
-  if (x < 60)
+  // this is analogue reading
+  // the threshold may differs every hardware
+  // feel free to tweak the value
+  if (x <= 50)
   {
     Serial.println("BTN_RIGHT_PRESSED");
   }
-  else if (x < 200)
+  else if (x <= 100)
   {
     Serial.println("BTN_UP_PRESSED");
   }
-  else if (x < 400)
+  else if (x <= 300)
   {
     Serial.println("BTN_DOWN_PRESSED");
   }
-  else if (x < 600)
+  else if (x <= 500)
   {
     Serial.println("BTN_LEFT_PRESSED");
   }
-  else if (x < 800)
+  else if (x <= 700)
   {
     Serial.println("BTN_SELECT_PRESSED");
   }
