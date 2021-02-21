@@ -77,20 +77,23 @@ const getCoinbaseBalance = () => {
         return reject([])
       }
 
-      const checkAccounts = (process.env.COINBASE_ACCOUNTS).split(',')
-      const coinbaseAccounts = checkAccounts.length >= 1 && checkAccounts[0] !== '' ? accounts.filter((ca) => checkAccounts.includes(ca.id)) : accounts
+      const messages = []
+      if (accounts.length > 0) {
+        const nativeBalanceCurrency = accounts[0].native_balance.currency
+        const totalNativeBalance = accounts.map(a => parseFloat(a.native_balance.amount || '0.00')).reduce((p, c) => {
+          return p + c
+        })
 
-      const messages = coinbaseAccounts.map((account) => {
-        return {
-          key: account.name,
-          value: `${account.native_balance.amount} ${account.native_balance.currency}`
-        }
-      })
+        messages.push({
+          key: 'Coinbase Wallet',
+          value: `Total: ${numeral(totalNativeBalance).format('0,0')} ${nativeBalanceCurrency}`
+        })
+      }
 
       if (messages.length === 0) {
         messages.push(
           {
-            key: 'Conbase Status',
+            key: 'Coinbase Status',
             value: 'Wallet Offline'
           }
         )
