@@ -24,7 +24,7 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "numeral": "^2.0.6",
-    "serialport": "^9.0.6",
+    "serialport": "^10.4.0",
     "title-case": "^3.0.3"
   }
 }
